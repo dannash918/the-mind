@@ -19,11 +19,11 @@ const Keyboard = ({cards, onKeyPress}) => {
   )
 }
 
-const DealButton = ({onKeyPress}) => {
+const DealButton = ({onKeyPress, text}) => {
   return (
     <Pressable onPress={() => onKeyPress(7)}>
       <View style={styles.key}>
-        <Text style={styles.keyLetter}>DEAL CARDS</Text>
+        <Text style={styles.keyLetter}>{text}</Text>
       </View>
     </Pressable>
   )
@@ -40,9 +40,19 @@ export default function App() {
     console.log(number + " pressed")
     jsonData = {"action": "sendmessage", "message": number}
     ws.send(JSON.stringify(jsonData))
+    
+    
+    // remove from cards
+    newCards = [...cards]
+    const index = newCards.indexOf(number)
+    if (index > -1) {
+      newCards.splice(index, 1)
+    }
+    setCards(newCards)
   }
 
   const handleDeal = () => {
+    setNumbers([])
     console.log("Attempting to deal")
     jsonData = {"action": "deal", "message": "7"}
     ws.send(JSON.stringify(jsonData))
@@ -53,6 +63,7 @@ export default function App() {
     
     if (response.handler == "deal") {
       console.log("Message returned: dealing cards")
+      console.log(response.message)
       setCards(response.message)
     }
     else {
@@ -68,31 +79,43 @@ export default function App() {
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.textView}><Text>Welcome to the Mind</Text></View> 
+      <View style={styles.header}><Text styles={styles.header}>Welcome to the Mind</Text></View> 
         {numbers.map(number => (
           <View key={number} style={styles.textView}>
             <Text style={styles.text}>Number is: {number}</Text>
           </View>
         ))}
-      <Keyboard onKeyPress={handleKeyPress} cards={cards}/>
-      <DealButton onKeyPress={handleDeal}/>
+      <Keyboard style={styles.keyboard} onKeyPress={handleKeyPress} cards={cards}/>
+      <DealButton style={styles.deal} text="DEAL CARDS" onKeyPress={handleDeal}/>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flex: 1,
   },
-  textView: {
+  header: {
     flexDirection: "row",
     justifyContent: "center",
+    fontWeight: "bold",
+  },
+  textView: {
+    // flexDirection: "row",
+    // justifyContent: "center",
+    alignItems: "center",
+    // justifyContent: "flex-start",
+    marginTop: "50px"
   },
   text: {
     // marginBottom
+    marginTop: "10px"
   },
-  keyboard: { flexDirection: "column" },
+  keyboard: { 
+    marginTop: "auto",
+    // alignItems: "flex-end"
+  },
   keyboardRow: {
     flexDirection: "row",
     justifyContent: "center",
@@ -103,9 +126,16 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 3,
     borderRadius: 5,
+    alignItems: "center"
   },
   keyLetter: {
     fontWeight: "500",
     fontSize: 15,
+    alignItems: "center"
   },
+  deal: {
+    marginLeft: "25%",
+    marginTop: "auto",
+    alignItems: "flex-end"
+  }
 })
