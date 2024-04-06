@@ -1,0 +1,19 @@
+version: 1.0
+# tag: test
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install --quiet --global expo-cli
+        - npm install
+    build:
+      commands:
+        - npx expo export -p web
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - $(npm root --global)/**/*
