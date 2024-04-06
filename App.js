@@ -22,7 +22,7 @@ const Keyboard = ({onKeyPress}) => {
 }
 
 export default function App() {
-  const [numbers, setNumbers] = React.useState(["1", "2"])
+  const [numbers, setNumbers] = React.useState([])
   
   const handleKeyPress = (number) => {
     jsonData = {"action": "sendmessage", "message": number}
