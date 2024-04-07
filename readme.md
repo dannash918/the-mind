@@ -6,8 +6,7 @@ npx expo start --web
 https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-chat-app.html
 
 ## ToDo
- - when deal event happens, trigger a refresh of numbers on screen for everyone
- - 
+ - give amount of cards to deal
 
 
 ## TODO When Creating Lambda

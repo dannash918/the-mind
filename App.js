@@ -1,5 +1,6 @@
 import React from "react"
 import { StyleSheet, View, Pressable, SafeAreaView, Text } from "react-native"
+import {Picker} from '@react-native-picker/picker';
 
 var ws = new WebSocket('wss://kke8tbr1y5.execute-api.ap-southeast-2.amazonaws.com/test/');
 
@@ -19,6 +20,30 @@ const Keyboard = ({cards, onKeyPress}) => {
   )
 }
 
+const DealPicker = ({cardsToDeal, setCardsToDeal }) => {
+  const cardDeals = [
+    { label: "1", value: 1 },
+    { label: "2", value: 2 },
+    { label: "3", value: 3 },
+    { label: "4", value: 4 },
+    { label: "5", value: 5 },
+    { label: "6", value: 6 },
+    { label: "7", value: 7 },]
+  return (
+    <Picker
+      style={styles.dealPicker}
+      itemStyle={styles.dealPickerItem}
+      selectedValue={cardsToDeal}
+      onValueChange={(itemValue) =>
+        setCardsToDeal(itemValue)
+      }>
+        {cardDeals.map(card => (
+          <Picker.Item key={card.value} label={card.label} value={card.value} />
+        ))}  
+    </Picker>
+  )
+}
+
 const DealButton = ({onKeyPress, text}) => {
   return (
     <Pressable onPress={() => onKeyPress(7)}>
@@ -32,6 +57,8 @@ const DealButton = ({onKeyPress, text}) => {
 export default function App() {
   const [numbers, setNumbers] = React.useState([])
   const [cards, setCards] = React.useState([])
+  const [cardsToDeal, setCardsToDeal] = React.useState(4);
+
   ws.onopen = (e) => {
     console.log("Connected")
   }
@@ -52,7 +79,7 @@ export default function App() {
 
   const handleDeal = () => {
     console.log("Attempting to deal")
-    jsonData = {"action": "deal", "message": "7"}
+    jsonData = {"action": "deal", "message": cardsToDeal}
     ws.send(JSON.stringify(jsonData))
   }
 
@@ -78,44 +105,54 @@ export default function App() {
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}><Text styles={styles.headerText}>Welcome to the Mind</Text></View> 
-        {numbers.map(number => (
-          <View key={number} style={styles.textView}>
-            <Text style={styles.text}>Number is: {number}</Text>
-          </View>
-        ))}
-      <Keyboard style={styles.keyboard} onKeyPress={handleKeyPress} cards={cards}/>
-      <DealButton style={styles.deal} text="DEAL CARDS" onKeyPress={handleDeal}/>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Welcome to the Mind</Text>
+      </View> 
+      <View style={styles.textView}>
+      {numbers.map(number => (
+          <Text key = {number} style={styles.text}>Number is: {number}</Text>
+      ))}
+      </View>
+      <View style={styles.base}>
+        <Keyboard onKeyPress={handleKeyPress} cards={cards}/>
+        <View style={styles.deal}>
+          <DealButton style={styles.dealButton} text="DEAL CARDS" onKeyPress={handleDeal}/>
+          <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal}/>
+        </View>
+      </View>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    // justifyContent: "space-between",
     flex: 1,
   },
   header: {
     flexDirection: "row",
     justifyContent: "center",
+    marginTop: "20px",
   },
   headerText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   textView: {
-    // flexDirection: "row",
-    // justifyContent: "center",
     alignItems: "center",
-    // justifyContent: "flex-start",
-    marginTop: "50px"
+    marginTop: "auto",
+    marginBottom: "auto",
+    flexGrow: 1,
   },
   text: {
-    // marginBottom
     marginTop: "10px"
   },
   keyboard: { 
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  base: {
     marginTop: "auto",
-    // alignItems: "flex-end"
+    justifyContent: "center",
+    marginBottom: "15px",
   },
   keyboardRow: {
     flexDirection: "row",
@@ -130,13 +167,30 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   keyLetter: {
-    fontWeight: "500",
     fontSize: 15,
     alignItems: "center"
   },
   deal: {
-    marginLeft: "25%",
-    marginTop: "auto",
-    alignItems: "flex-end"
-  }
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly"
+  },
+  dealButton: {
+    
+  },
+  dealPicker: {
+    width: 100,
+    height: 44,
+    backgroundColor: '#F5F9FF',
+    borderColor: 'black',
+    borderWidth: 1,
+    justifyContent: "center",
+    textAlign: 'center',
+  },
+  dealPickerItem: {
+    height: 44,
+    color: 'red',
+    justifyContent: "center",
+    textAlign: 'center',
+  },
 })
