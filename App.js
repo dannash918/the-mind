@@ -41,7 +41,6 @@ export default function App() {
     jsonData = {"action": "sendmessage", "message": number}
     ws.send(JSON.stringify(jsonData))
     
-    
     // remove from cards
     newCards = [...cards]
     const index = newCards.indexOf(number)
@@ -52,7 +51,6 @@ export default function App() {
   }
 
   const handleDeal = () => {
-    setNumbers([])
     console.log("Attempting to deal")
     jsonData = {"action": "deal", "message": "7"}
     ws.send(JSON.stringify(jsonData))
@@ -64,6 +62,7 @@ export default function App() {
     if (response.handler == "deal") {
       console.log("Message returned: dealing cards")
       console.log(response.message)
+      setNumbers([])
       setCards(response.message)
     }
     else {
@@ -79,7 +78,7 @@ export default function App() {
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}><Text styles={styles.header}>Welcome to the Mind</Text></View> 
+      <View style={styles.header}><Text styles={styles.headerText}>Welcome to the Mind</Text></View> 
         {numbers.map(number => (
           <View key={number} style={styles.textView}>
             <Text style={styles.text}>Number is: {number}</Text>
@@ -99,6 +98,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "center",
+  },
+  headerText: {
     fontWeight: "bold",
   },
   textView: {
