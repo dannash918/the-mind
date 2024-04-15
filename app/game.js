@@ -1,6 +1,8 @@
-import React from "react"
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Pressable, SafeAreaView, Text } from "react-native"
 import {Picker} from '@react-native-picker/picker';
+import { useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 var ws = new WebSocket('wss://kke8tbr1y5.execute-api.ap-southeast-2.amazonaws.com/test/');
 
@@ -54,10 +56,25 @@ const DealButton = ({onKeyPress, text}) => {
   )
 }
 
-export default function App() {
+export default function Game({}) {
   const [numbers, setNumbers] = React.useState([])
   const [cards, setCards] = React.useState([])
   const [cardsToDeal, setCardsToDeal] = React.useState(4);
+  const [name, setName] = React.useState('Fred');
+  const params = useLocalSearchParams();
+  const { room } = params;
+
+  useEffect(() => {
+      const firstLoad = async () => {
+        try {
+          const nickName = await AsyncStorage.getItem("user");
+          setName(nickName);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+    firstLoad();
+    }, []);
 
   ws.onopen = (e) => {
     console.log("Connected")
@@ -83,30 +100,36 @@ export default function App() {
     ws.send(JSON.stringify(jsonData))
   }
 
-  ws.onmessage = (e) => {
-    response = JSON.parse(e.data)
-    
+  // Deal Event Listener
+  ws.addEventListener("message", function(event) {
+    response = JSON.parse(event.data)
     if (response.handler == "deal") {
       console.log("Message returned: dealing cards")
       console.log(response.message)
       setNumbers([])
       setCards(response.message)
     }
-    else {
+  });
+
+  // Play Number Listener
+  ws.addEventListener("message", function(event) {
+    response = JSON.parse(event.data)
+    if (response.handler == "playNum") {
       console.log("Message returned: playing number")
       number = response.message
       newNumbers = [...numbers]
       newNumbers.push(number)
       setNumbers(newNumbers)
     }
-    
-
-  };
+  });
   
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome to the Mind</Text>
+        <Text style={styles.headerText}>Welcome to the Mind.</Text>
+      </View> 
+      <View style={styles.header}>
+        <Text >Name: {name} Room: {room}</Text>
       </View> 
       <View style={styles.textView}>
       {numbers.map(number => (
