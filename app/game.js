@@ -106,7 +106,7 @@ export default function Game({}) {
         newNumbers = [...numbers]
         newNumbers.push(number)
         setNumbers(newNumbers)
-        const newLine = `${number} was played`
+        const newLine = `The number is: ${number}`
         newText = [...text]
         newText.push(newLine)
         setText(newText)
@@ -119,37 +119,7 @@ export default function Game({}) {
         setText(newText)
       }
     };
-  }); 
-
-  // ws.onopen = (e) => {
-  //   console.log("Connected: " + name)
-  //   ms = {room: room, user: name}
-  //   jsonData = {"action": "join", "message": ms}
-  //   ws.send(JSON.stringify(jsonData))
-  // }
-
-  
-  // ws.onmessage = function (event) {
-  //   response = JSON.parse(event.data)
-  //   if (response.handler == "deal") {
-  //     console.log("Message returned: dealing cards")
-  //     console.log(response.message)
-  //     setNumbers([])
-  //     setCards(response.message)
-  //   }
-  //   if (response.handler == "playNum") {
-  //     console.log("Message returned: playing number")
-  //     number = response.message
-  //     newNumbers = [...numbers]
-  //     newNumbers.push(number)
-  //     setNumbers(newNumbers)
-  //   }
-  //   if (response.handler == "join") {
-  //     console.log("Someone joined the room: " + response.user)
-  //   }
-  // };  
-
-  
+  });   
 
   const handleKeyPress = (number) => {
     console.log(number + " pressed")
