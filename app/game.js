@@ -4,7 +4,6 @@ import {Picker} from '@react-native-picker/picker';
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-var ws = new WebSocket('wss://kke8tbr1y5.execute-api.ap-southeast-2.amazonaws.com/test/');
 
 const Keyboard = ({cards, onKeyPress}) => {
   return (
@@ -61,24 +60,76 @@ export default function Game({}) {
   const [cards, setCards] = React.useState([])
   const [cardsToDeal, setCardsToDeal] = React.useState(4);
   const [name, setName] = React.useState('Fred');
+  const [text, setText] = React.useState([])
   const params = useLocalSearchParams();
   const { room } = params;
+  const [ws, setWs] = React.useState(null)
 
   useEffect(() => {
-      const firstLoad = async () => {
-        try {
-          const nickName = await AsyncStorage.getItem("user");
-          setName(nickName);
-        } catch (err) {
-          console.log(err);
-        }
-      };
-    firstLoad();
-    }, []);
+    const ws = new WebSocket(`wss://kke8tbr1y5.execute-api.ap-southeast-2.amazonaws.com/test?room=1234`)
+    setWs(ws)
+  }, []);
 
-  ws.onopen = (e) => {
-    console.log("Connected")
-  }
+  useEffect(() => {
+    if (ws == null) {
+      return
+    }
+    ws.onopen = (e) => {
+      console.log("Connected: " + name)
+      ms = {room: room, user: name}
+      jsonData = {"action": "join", "message": ms}
+      ws.send(JSON.stringify(jsonData))
+    }
+
+    // Play Number Listener
+    ws.addEventListener("message", function(event) {
+      response = JSON.parse(event.data)
+      if (response.handler == "join") {
+        console.log("Someone joined the room: " + event.data.user)
+      }
+    });
+
+    // Play Number Listener
+    ws.addEventListener("message", function(event) {
+      response = JSON.parse(event.data)
+      if (response.handler == "playNum") {
+        console.log("Message returned: playing number")
+        number = response.message
+        newNumbers = [...numbers]
+        newNumbers.push(number)
+        setNumbers(newNumbers)
+      }
+    });
+
+    // Deal Event Listener
+    ws.addEventListener("message", function(event) {
+      response = JSON.parse(event.data)
+      if (response.handler == "deal") {
+        console.log("Message returned: dealing cards")
+        console.log(response.message)
+        setNumbers([])
+        setCards(response.message)
+      }
+    });
+
+    // return () => ws.close()
+  }), [ws]
+  
+  
+
+  // TODO PUT THIS CODE IN OTHER USEEFFECT WITH []
+  // useEffect(() => {
+  //     const firstLoad = async () => {
+  //       try {
+  //         const nickName = await AsyncStorage.getItem("user");
+  //         ms = {room: room, user: nickName}
+  //         setName(nickName);
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     };
+  //   firstLoad();
+  // }, []);  
 
   const handleKeyPress = (number) => {
     console.log(number + " pressed")
@@ -99,42 +150,16 @@ export default function Game({}) {
     jsonData = {"action": "deal", "message": cardsToDeal}
     ws.send(JSON.stringify(jsonData))
   }
-
-  // Deal Event Listener
-  ws.addEventListener("message", function(event) {
-    response = JSON.parse(event.data)
-    if (response.handler == "deal") {
-      console.log("Message returned: dealing cards")
-      console.log(response.message)
-      setNumbers([])
-      setCards(response.message)
-    }
-  });
-
-  // Play Number Listener
-  ws.addEventListener("message", function(event) {
-    response = JSON.parse(event.data)
-    if (response.handler == "playNum") {
-      console.log("Message returned: playing number")
-      number = response.message
-      newNumbers = [...numbers]
-      newNumbers.push(number)
-      setNumbers(newNumbers)
-    }
-  });
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome to the Mind.</Text>
-      </View> 
-      <View style={styles.header}>
-        <Text >Name: {name} Room: {room}</Text>
-      </View> 
       <View style={styles.textView}>
       {numbers.map(number => (
-          <Text key = {number} style={styles.text}>Number is: {number}</Text>
+        <Text key = {number} style={styles.text}>Number is: {number}</Text>
       ))}
+      {/* {text.map((t, idx) => (
+          <Text key = {idx} style={styles.text}>{t}</Text>
+      ))} */}
       </View>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards}/>
