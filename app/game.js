@@ -98,6 +98,7 @@ export default function Game({}) {
         console.log("Message returned: dealing cards")
         console.log(response.message)
         setNumbers([])
+        setText([])
         setCards(response.message)
       }
       if (response.handler == "playNum") {
