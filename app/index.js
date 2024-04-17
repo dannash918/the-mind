@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Pressable, Text, View, TextInput } from "react-native";
+import { SafeAreaView, StyleSheet, Pressable, Text, View, TextInput } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -36,7 +36,7 @@ const App = () => {
       };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <Text style={styles.formLabel}>Welcome to the Mind</Text>
           <View>
             <TextInput 
@@ -55,7 +55,7 @@ const App = () => {
                 </View>
             </Pressable>
           </View>
-        </View>
+        </SafeAreaView>
       );
 };
 
