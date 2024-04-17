@@ -98,15 +98,17 @@ export default function Game({}) {
         console.log("Message returned: dealing cards")
         console.log(response.message)
         setNumbers([])
+        setText([])
         setCards(response.message)
       }
       if (response.handler == "playNum") {
         console.log("Message returned: playing number")
         number = response.message
+        player = response.player
         newNumbers = [...numbers]
         newNumbers.push(number)
         setNumbers(newNumbers)
-        const newLine = `The number is: ${number}`
+        const newLine = `${player} played: ${number}`
         newText = [...text]
         newText.push(newLine)
         setText(newText)
@@ -123,7 +125,7 @@ export default function Game({}) {
 
   const handleKeyPress = (number) => {
     console.log(number + " pressed")
-    jsonData = {"action": "sendmessage", "message": number}
+    jsonData = {"action": "sendmessage", "message": number, "player": name}
     ws.send(JSON.stringify(jsonData))
     
     // remove from cards
