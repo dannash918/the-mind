@@ -5,10 +5,6 @@ npx expo start --web
 ### Websockets on AWS
 https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-chat-app.html
 
-Try this:
-multiple onmessage eventhandlers
-https://stackoverflow.com/questions/39210534/multiple-handlers-for-websocket-javascript
-
 ## ToDo
  - show tally of total cards (10/15 played)
  - validate victory/loss
