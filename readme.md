@@ -11,9 +11,9 @@ https://stackoverflow.com/questions/39210534/multiple-handlers-for-websocket-jav
 
 ## ToDo
  - show tally of total cards (10/15 played)
+ - validate victory/loss
  - give gif of fail/celebration when you win/lose
- - show name of person who played card
- - save name to DB? or Cookie or something?
+ - iphone fix https://maheshnandam.medium.com/use-safeareaview-from-react-navigation-to-fix-iphone-x-design-issue-ba531a9181d
 
 
 ## TODO When Creating Lambda
