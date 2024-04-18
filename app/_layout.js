@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native"
 
 export default function Layout() {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer>
         <Drawer.Screen
