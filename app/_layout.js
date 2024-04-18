@@ -3,6 +3,7 @@ import { Drawer } from 'expo-router/drawer';
 
 export default function Layout() {
   return (
+    <SafeAreaView style={styles.container}>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer>
         <Drawer.Screen
@@ -22,5 +23,6 @@ export default function Layout() {
         />
       </Drawer>
     </GestureHandlerRootView>
+          </SafeAreaView>
   );
 }
