@@ -1,5 +1,6 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
+import { SafeAreaView } from "react-native"
 
 export default function Layout() {
   return (
