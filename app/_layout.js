@@ -4,8 +4,7 @@ import { SafeAreaView } from "react-native"
 
 export default function Layout() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer>
         <Drawer.Screen
           name="index" // This is the name of the page and must match the url from root
@@ -24,6 +23,5 @@ export default function Layout() {
         />
       </Drawer>
     </GestureHandlerRootView>
-          </SafeAreaView>
   );
 }
