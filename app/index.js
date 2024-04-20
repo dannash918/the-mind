@@ -36,10 +36,8 @@ const App = () => {
       };
 
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <View>
+      
+        <View style={styles.container}>
           <Text style={styles.formLabel}>Welcome to the Mind</Text>
           <TextInput 
               placeholder="Name" 
@@ -57,7 +55,7 @@ const App = () => {
               </View>
           </Pressable>
         </View>
-      </ KeyboardAvoidingView>
+     
       );
 };
 

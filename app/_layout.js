@@ -1,10 +1,11 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
-import { SafeAreaView, StyleSheet } from "react-native"
+import { SafeAreaView, StyleSheet, KeyboardAvoidingView } from "react-native"
 
 export default function Layout() {
   return (
     <SafeAreaView style={styles.container}>
+       <KeyboardAvoidingView  style={styles.container}>
         <Drawer>
           <Drawer.Screen
             name="index" // This is the name of the page and must match the url from root
@@ -22,7 +23,7 @@ export default function Layout() {
             }}
           />
         </Drawer>
-      
+      </ KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
