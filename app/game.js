@@ -102,6 +102,7 @@ export default function Game({}) {
         setNumbers([])
         setText([])
         setCards(response.message)
+        setPlayedCards(0)
         setTotalCards(response.totalCards)
       }
       if (response.handler == "playNum") {
