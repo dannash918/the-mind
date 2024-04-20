@@ -36,7 +36,9 @@ const App = () => {
       };
 
     return (
-      <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
         <View>
           <Text style={styles.formLabel}>Welcome to the Mind</Text>
           <TextInput 
