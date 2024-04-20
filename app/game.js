@@ -65,19 +65,20 @@ export default function Game({}) {
   const { room } = params;
   const [ws, setWs] = React.useState(null)
   const [text, setText] = React.useState([])
+  const [totalCards, setTotalCards] = React.useState()
+  const [playedCards, setPlayedCards] = React.useState(0)
 
-   // TODO PUT THIS CODE IN OTHER USEEFFECT WITH []
-   useEffect(() => {
-      const firstLoad = async () => {
-        try {
-          const nickName = await AsyncStorage.getItem("user");
-          ms = {room: room, user: nickName}
-          setName(nickName);
-          const ws = new WebSocket(`wss://kke8tbr1y5.execute-api.ap-southeast-2.amazonaws.com/test?room=${room}`)
-          setWs(ws)
-        } catch (err) {
-          console.log(err);
-        }
+  useEffect(() => {
+    const firstLoad = async () => {
+      try {
+        const nickName = await AsyncStorage.getItem("user");
+        ms = { room: room, user: nickName }
+        setName(nickName);
+        const ws = new WebSocket(`wss://kke8tbr1y5.execute-api.ap-southeast-2.amazonaws.com/test?room=${room}`)
+        setWs(ws)
+      } catch (err) {
+        console.log(err);
+      }
       };
     firstLoad();
   }, []); 
@@ -97,11 +98,15 @@ export default function Game({}) {
       if (response.handler == "deal") {
         console.log("Message returned: dealing cards")
         console.log(response.message)
+        console.log("Total Cards: " + response.totalCards)
         setNumbers([])
         setText([])
         setCards(response.message)
+        setTotalCards(response.totalCards)
       }
       if (response.handler == "playNum") {
+        newPlayedCards = playedCards + 1
+        setPlayedCards(newPlayedCards)
         console.log("Message returned: playing number")
         number = response.message
         player = response.player
@@ -114,7 +119,7 @@ export default function Game({}) {
         setText(newText)
       }
       if (response.handler == "join") {
-        console.log("Someone joined the room: " + response.user)
+        console.log("Someone joined the room: " + response.user + "Room: " + response.room)
         const newLine = `${response.user} joined the room`
         newText = [...text]
         newText.push(newLine)
@@ -125,7 +130,7 @@ export default function Game({}) {
 
   const handleKeyPress = (number) => {
     console.log(number + " pressed")
-    jsonData = {"action": "sendmessage", "message": number, "player": name}
+    jsonData = {"action": "sendmessage", "message": number, "player": name, "room": room}
     ws.send(JSON.stringify(jsonData))
     
     // remove from cards
@@ -139,28 +144,29 @@ export default function Game({}) {
 
   const handleDeal = () => {
     console.log("Attempting to deal")
-    jsonData = {"action": "deal", "message": cardsToDeal}
+    ms = {room: room, cards: cardsToDeal}
+    jsonData = {"action": "deal", "room": room, numCards: cardsToDeal}
     ws.send(JSON.stringify(jsonData))
   }
   
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.counterView}>
+        {totalCards && <Text style={styles.text}>Cards Played: {playedCards} / {totalCards}</Text>}
+      </View>
       <View style={styles.textView}>
-      {/* {numbers.map(number => (
-        <Text key = {number} style={styles.text}>Number is: {number}</Text>
-      ))} */}
       {text.map((t, idx) => (
-          <Text key = {idx} style={styles.text}>{t}</Text>
+        <Text key={idx} style={styles.text}>{t}</Text>
       ))}
       </View>
       <View style={styles.base}>
-        <Keyboard onKeyPress={handleKeyPress} cards={cards}/>
+        <Keyboard onKeyPress={handleKeyPress} cards={cards} />
         <View style={styles.deal}>
-          <DealButton style={styles.dealButton} text="DEAL CARDS" onKeyPress={handleDeal}/>
-          <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal}/>
+          <DealButton style={styles.dealButton} text="DEAL CARDS" onKeyPress={handleDeal} />
+          <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal} />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -182,8 +188,14 @@ const styles = StyleSheet.create({
     marginBottom: "auto",
     flexGrow: 1,
   },
+  counterView: {
+    alignItems: "center",
+    marginTop: "auto",
+    marginBottom: "auto",
+    // flexGrow: 1,
+  },
   text: {
-    marginTop: "10px"
+    marginTop: "10px",
   },
   keyboard: { 
     flexDirection: "row",

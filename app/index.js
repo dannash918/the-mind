@@ -36,9 +36,9 @@ const App = () => {
       };
 
     return (
-        <SafeAreaView style={styles.container}>
-          <Text style={styles.formLabel}>Welcome to the Mind</Text>
+        <View style={styles.container}>
           <View>
+            <Text style={styles.formLabel}>Welcome to the Mind</Text>
             <TextInput 
                 placeholder="Name" 
                 style={styles.inputStyle}
@@ -55,7 +55,7 @@ const App = () => {
                 </View>
             </Pressable>
           </View>
-        </SafeAreaView>
+        </View>
       );
 };
 
