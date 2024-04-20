@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, KeyboardAvoidingView } from "react-native"
 
 export default function Layout() {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} forceInset={{ top: 'always' }}>
        <KeyboardAvoidingView  style={styles.container}>
         <Drawer>
           <Drawer.Screen
