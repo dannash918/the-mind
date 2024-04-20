@@ -6,8 +6,8 @@ npx expo start --web
 https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-chat-app.html
 
 ## ToDo
- - show tally of total cards (10/15 played)
  - validate victory/loss
+ - scrollview
  - give gif of fail/celebration when you win/lose
  - iphone fix https://maheshnandam.medium.com/use-safeareaview-from-react-navigation-to-fix-iphone-x-design-issue-ba531a9181d ???
 
