@@ -156,7 +156,7 @@ export default function Game({}) {
       <View style={styles.counterView}>
         {totalCards && <Text style={styles.text}>Cards Played: {playedCards} / {totalCards}</Text>}
       </View>
-      <ScrollView contentContainerStyle ={styles.textView}>
+      <ScrollView style={styles.scrollView} contentContainerStyle ={styles.scrollText}>
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
@@ -184,7 +184,11 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: 'bold',
   },
-  textView: {
+  scrollView: {
+    marginTop: "10px",
+    marginBottom: "20px"
+  },
+  scrollText: {
     alignItems: "center",
     marginTop: "auto",
     marginBottom: "auto",
