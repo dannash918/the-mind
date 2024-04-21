@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Pressable, SafeAreaView, Text } from "react-native"
+import { StyleSheet, View, Pressable, SafeAreaView, ScrollView, Text } from "react-native"
 import {Picker} from '@react-native-picker/picker';
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -112,6 +112,7 @@ export default function Game({}) {
         number = response.message
         player = response.player
         newNumbers = [...numbers]
+        
         newNumbers.push(number)
         setNumbers(newNumbers)
         const newLine = `${player} played: ${number}`
@@ -155,11 +156,11 @@ export default function Game({}) {
       <View style={styles.counterView}>
         {totalCards && <Text style={styles.text}>Cards Played: {playedCards} / {totalCards}</Text>}
       </View>
-      <View style={styles.textView}>
+      <ScrollView contentContainerStyle ={styles.textView}>
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
-      </View>
+      </ScrollView>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} />
         <View style={styles.deal}>
