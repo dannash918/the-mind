@@ -152,7 +152,7 @@ export default function Game({}) {
   }
   
   return (
-    <View style={styles.container}>
+    <SafeAreaView  style={styles.container}>
       <View style={styles.counterView}>
         {totalCards && <Text style={styles.text}>Cards Played: {playedCards} / {totalCards}</Text>}
       </View>
@@ -168,7 +168,7 @@ export default function Game({}) {
           <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal} />
         </View>
       </View>
-    </View>
+    </SafeAreaView >
   )
 }
 

@@ -1,10 +1,11 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import { SafeAreaView, StyleSheet, KeyboardAvoidingView } from "react-native"
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function Layout() {
   return (
-    <SafeAreaView style={styles.container} forceInset={{ top: 'always' }}>
+    <SafeAreaProvider style={styles.container} >
        <KeyboardAvoidingView  style={styles.container}>
         <Drawer>
           <Drawer.Screen
@@ -24,7 +25,7 @@ export default function Layout() {
           />
         </Drawer>
       </ KeyboardAvoidingView>
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
