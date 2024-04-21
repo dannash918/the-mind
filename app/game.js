@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Pressable, SafeAreaView, ScrollView, Text } from "react-native"
+import { StyleSheet, View, Pressable, SafeAreaView, ScrollView, Text, Image } from "react-native"
 import {Picker} from '@react-native-picker/picker';
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -56,6 +56,17 @@ const DealButton = ({onKeyPress, text}) => {
   )
 }
 
+const HandleWin = async (setGifUrl) => {
+  try {
+    const response = await fetch(`https://api.giphy.com/v1/gifs/random?tag=winner&api_key=TcX2E9NN88FXG1LTEiZU3SWMNKTUG1Vn`);
+    const json = await response.json();
+    const gifUrl = json.data.images.original.url
+    setGifUrl(gifUrl)
+  } catch (error) {
+    console.error('Error fetching GIF:', error);
+  }
+}
+
 export default function Game({}) {
   const [numbers, setNumbers] = React.useState([])
   const [cards, setCards] = React.useState([])
@@ -67,6 +78,7 @@ export default function Game({}) {
   const [text, setText] = React.useState([])
   const [totalCards, setTotalCards] = React.useState()
   const [playedCards, setPlayedCards] = React.useState(0)
+  const [gifUrl, setGifUrl] = useState();
 
   useEffect(() => {
     const firstLoad = async () => {
@@ -89,9 +101,8 @@ export default function Game({}) {
       console.log("Connected: " + name)
       ms = {room: room, user: name}
       jsonData = {"action": "join", "message": ms}
-      ws.send(JSON.stringify(jsonData))
+      ws.send(JSON.stringify(jsonData))  
     }
-
     
     ws.onmessage = function (event) {
       response = JSON.parse(event.data)
@@ -103,6 +114,7 @@ export default function Game({}) {
         setText([])
         setCards(response.message)
         setPlayedCards(0)
+        setGifUrl()
         setTotalCards(response.totalCards)
       }
       if (response.handler == "playNum") {
@@ -112,12 +124,15 @@ export default function Game({}) {
         number = response.message
         player = response.player
         newNumbers = [...numbers]
-        
         newNumbers.push(number)
         setNumbers(newNumbers)
-        const newLine = `${player} played: ${number}`
         newText = [...text]
+        const newLine = `${player} played: ${number}`
         newText.push(newLine)
+        if (newPlayedCards === totalCards) {
+          newText.push("You have won!")
+          HandleWin(setGifUrl)
+        }
         setText(newText)
       }
       if (response.handler == "join") {
@@ -161,6 +176,7 @@ export default function Game({}) {
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
+      {gifUrl && <Image source={{ uri: gifUrl }} style={styles.gif} />}
       </ScrollView>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} />
@@ -192,6 +208,11 @@ const styles = StyleSheet.create({
   },
   scrollText: {
     alignItems: "center",
+  },
+  gif: {
+    width: 200,
+    height: 200,
+    marginTop: "10px",
   },
   text: {
     marginTop: "10px",
