@@ -152,9 +152,10 @@ export default function Game({}) {
   }
   
   return (
-    <SafeAreaView  style={styles.container}>
-      <View style={styles.counterView}>
-        {totalCards && <Text style={styles.text}>Cards Played: {playedCards} / {totalCards}</Text>}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerView}>
+        {room && <Text style={styles.headerText}>Room: {room}</Text>}
+        {totalCards && <Text style={styles.headerText}>Cards Played: {playedCards} / {totalCards}</Text>}
       </View>
       <ScrollView style={styles.scrollView} contentContainerStyle ={styles.scrollText}>
       {text.map((t, idx) => (
@@ -174,43 +175,37 @@ export default function Game({}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1,    
   },
-  header: {
+  headerView: {
     flexDirection: "row",
-    justifyContent: "center",
-    marginTop: "20px",
+    justifyContent: "space-evenly",
+    marginTop: "10px",
   },
   headerText: {
     fontWeight: 'bold',
   },
   scrollView: {
-    marginTop: "10px",
-    marginBottom: "20px"
+    flex: 1,
+    marginTop: "20px",
+    marginBottom: "20px",
   },
   scrollText: {
     alignItems: "center",
-    marginTop: "auto",
-    marginBottom: "auto",
-    flexGrow: 1,
-  },
-  counterView: {
-    alignItems: "center",
-    marginTop: "auto",
-    marginBottom: "auto",
-    // flexGrow: 1,
   },
   text: {
     marginTop: "10px",
   },
+  base: {
+    alignContent: "flex-end",
+    marginTop: "auto",
+    marginBottom: "auto",
+    justifyContent: "center",
+    marginBottom: "15px",
+  },
   keyboard: { 
     flexDirection: "row",
     justifyContent: "center",
-  },
-  base: {
-    marginTop: "auto",
-    justifyContent: "center",
-    marginBottom: "15px",
   },
   keyboardRow: {
     flexDirection: "row",
@@ -232,9 +227,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly"
-  },
-  dealButton: {
-    
   },
   dealPicker: {
     width: 100,
