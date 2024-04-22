@@ -2,6 +2,7 @@ import * as React from 'react';
 import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Pressable, Text, View, TextInput } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const saveUser = async ({user}) => {
     return (
@@ -38,22 +39,24 @@ const App = () => {
     return (
       
         <SafeAreaView  style={styles.container}>
-          <Text style={styles.formLabel}>Welcome to the Mind</Text>
-          <TextInput 
-              placeholder="Name" 
+          <KeyboardAwareScrollView>
+            <Text style={styles.formLabel}>Welcome to the Mind</Text>
+            <TextInput 
+                placeholder="Name" 
+                style={styles.inputStyle}
+                onChangeText={newText => setName(newText)}
+            />
+            <TextInput
+              placeholder={room}
               style={styles.inputStyle}
-              onChangeText={newText => setName(newText)}
-          />
-          <TextInput
-            placeholder={room}
-            style={styles.inputStyle}
-            onChangeText={newText => setRoom(newText)}
-          />
-          <Pressable onPress={handleNavigate}>
-              <View style={styles.key}>
-                  <Text style={styles.keyLetter}>Start Game</Text>
-              </View>
-          </Pressable>
+              onChangeText={newText => setRoom(newText)}
+            />
+            <Pressable onPress={handleNavigate}>
+                <View style={styles.key}>
+                    <Text style={styles.keyLetter}>Start Game</Text>
+                </View>
+            </Pressable>
+          </KeyboardAwareScrollView>
         </SafeAreaView >
      
       );
