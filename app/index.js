@@ -38,8 +38,8 @@ const App = () => {
 
     return (
       
-        <SafeAreaView  style={styles.container}>
-          <KeyboardAwareScrollView>
+        <SafeAreaView style={styles.container}>
+          <KeyboardAwareScrollView contentContainerStyle={styles.keyboardView}>
             <Text style={styles.formLabel}>Welcome to the Mind</Text>
             <TextInput 
                 placeholder="Name" 
@@ -64,6 +64,9 @@ const App = () => {
 
 const styles = StyleSheet.create({
     container: {
+      flex: 1,
+    },
+    keyboardView: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
