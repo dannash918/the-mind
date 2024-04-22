@@ -131,7 +131,7 @@ export default function Game({}) {
         newText.push(newLine)
         if (newPlayedCards === totalCards) {
           newText.push("You have won!")
-          HandleWin(setGifUrl)
+          // HandleWin(setGifUrl)
         }
         setText(newText)
       }
@@ -172,7 +172,7 @@ export default function Game({}) {
         {room && <Text style={styles.headerText}>Room: {room}</Text>}
         {totalCards && <Text style={styles.headerText}>Cards Played: {playedCards} / {totalCards}</Text>}
       </View>
-      <ScrollView style={styles.scrollView} contentContainerStyle ={styles.scrollText}>
+      <ScrollView style={styles.scrollView} contentContainerStyle ={styles.scrollText} ref={ref => {this.scrollView = ref}} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
