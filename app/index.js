@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Pressable, Text, View, TextInput } from "react-native";
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Pressable, Text, View, TextInput, Platform } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const saveUser = async ({user}) => {
     return (
@@ -39,24 +40,30 @@ const App = () => {
     return (
       
         <SafeAreaView style={styles.container}>
-          <KeyboardAwareScrollView contentContainerStyle={styles.keyboardView}>
-            <Text style={styles.formLabel}>Welcome to the Mind</Text>
-            <TextInput 
-                placeholder="Name" 
+          <KeyboardAvoidingView  
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // enabled={true}
+            style={styles.keyboardView}
+          >
+            <ScrollView contentContainerStyle={styles.scrollView}>
+              <Text style={styles.formLabel}>Welcome to the Mind</Text>
+              <TextInput 
+                  placeholder="Name" 
+                  style={styles.inputStyle}
+                  onChangeText={newText => setName(newText)}
+              />
+              <TextInput
+                placeholder={room}
                 style={styles.inputStyle}
-                onChangeText={newText => setName(newText)}
-            />
-            <TextInput
-              placeholder={room}
-              style={styles.inputStyle}
-              onChangeText={newText => setRoom(newText)}
-            />
-            <Pressable onPress={handleNavigate}>
-                <View style={styles.key}>
-                    <Text style={styles.keyLetter}>Start Game</Text>
-                </View>
-            </Pressable>
-          </KeyboardAwareScrollView>
+                onChangeText={newText => setRoom(newText)}
+              />
+              <Pressable onPress={handleNavigate}>
+                  <View style={styles.key}>
+                      <Text style={styles.keyLetter}>Start Game</Text>
+                  </View>
+              </Pressable>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </SafeAreaView >
      
       );
@@ -67,9 +74,13 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     keyboardView: {
+      flex: 1
+    },
+    scrollView: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+      backgroundColor: "red"
     },
     formLabel: {
       fontSize: 20,
