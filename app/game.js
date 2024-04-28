@@ -79,6 +79,7 @@ export default function Game({}) {
   const [totalCards, setTotalCards] = React.useState()
   const [playedCards, setPlayedCards] = React.useState(0)
   const [gifUrl, setGifUrl] = useState();
+  const [gameState, setGameState] = React.useState("play")
 
   useEffect(() => {
     const firstLoad = async () => {
@@ -93,7 +94,18 @@ export default function Game({}) {
       }
       };
     firstLoad();
-  }, []); 
+  }, []);
+
+  useEffect(() => {
+    console.log("Game state is: " + gameState)
+    newText = [...text]
+    if (gameState === "win") {
+      newText.push("You have won!")
+    } else if (gameState === "lose") {
+      newText.push("You have lost")
+    }
+    setText(newText)
+  }, [gameState]); 
 
   useEffect(() => {
     if (ws == null) {return}
@@ -108,7 +120,7 @@ export default function Game({}) {
       response = JSON.parse(event.data)
       if (response.handler == "deal") {
         console.log("Message returned: dealing cards")
-        console.log(response.message)
+        console.log("Cards: " + response.message)
         console.log("Total Cards: " + response.totalCards)
         setNumbers([])
         setText([])
@@ -129,10 +141,8 @@ export default function Game({}) {
         newText = [...text]
         const newLine = `${player} played: ${number}`
         newText.push(newLine)
-        if (newPlayedCards === totalCards) {
-          newText.push("You have won!")
-          // HandleWin(setGifUrl)
-        }
+        setGameState(response.gameState)
+        setGifUrl(response.gifUrl)
         setText(newText)
       }
       if (response.handler == "join") {
