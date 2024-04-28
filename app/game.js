@@ -56,17 +56,6 @@ const DealButton = ({onKeyPress, text}) => {
   )
 }
 
-const HandleWin = async (setGifUrl) => {
-  try {
-    const response = await fetch(`https://api.giphy.com/v1/gifs/random?tag=winner&api_key=TcX2E9NN88FXG1LTEiZU3SWMNKTUG1Vn`);
-    const json = await response.json();
-    const gifUrl = json.data.images.original.url
-    setGifUrl(gifUrl)
-  } catch (error) {
-    console.error('Error fetching GIF:', error);
-  }
-}
-
 export default function Game({}) {
   const [numbers, setNumbers] = React.useState([])
   const [cards, setCards] = React.useState([])
@@ -141,9 +130,9 @@ export default function Game({}) {
         newText = [...text]
         const newLine = `${player} played: ${number}`
         newText.push(newLine)
+        setText(newText)
         setGameState(response.gameState)
         setGifUrl(response.gifUrl)
-        setText(newText)
       }
       if (response.handler == "join") {
         console.log("Someone joined the room: " + response.user + "Room: " + response.room)
