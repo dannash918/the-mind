@@ -116,6 +116,7 @@ export default function Game({}) {
         setCards(response.message)
         setPlayedCards(0)
         setGifUrl()
+        setGameState("play")
         setTotalCards(response.totalCards)
       }
       if (response.handler == "playNum") {
