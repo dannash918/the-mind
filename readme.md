@@ -6,8 +6,7 @@ npx expo start --web
 https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-chat-app.html
 
 ## ToDo
- - validate victory/loss
- - give gif of fail/celebration when you win/lose
+ - improve performance, send number first, then do DB and calculations to calculate victory/loss and send another message
  - AI generate funny victory/loss statement
  - iphone fix https://maheshnandam.medium.com/use-safeareaview-from-react-navigation-to-fix-iphone-x-design-issue-ba531a9181d ???
 
