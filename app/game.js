@@ -107,11 +107,11 @@ export default function Game({}) {
       response = JSON.parse(event.data)
       if (response.handler == "deal") {
         console.log("Message returned: dealing cards")
-        console.log("Cards: " + response.message)
+        console.log("Cards: " + response.cards)
         console.log("Total Cards: " + response.totalCards)
         setNumbers([])
         setText([])
-        setCards(response.message)
+        setCards(response.cards)
         setPlayedCards(0)
         setGifUrl()
         setGameState("play")
