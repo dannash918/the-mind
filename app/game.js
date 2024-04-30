@@ -4,16 +4,14 @@ import {Picker} from '@react-native-picker/picker';
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
 const Keyboard = ({cards, onKeyPress}) => {
   return (
     <View style={styles.keyboard}>
       <View style={styles.keyboardRow}>
         {cards.map(number => (
           <Pressable key={number} onPress={() => onKeyPress(number)}>
-            <View style={styles.key}>
-              <Text style={styles.keyLetter}>{number}</Text>
+            <View style={styles.card}>
+              <Text style={styles.cardText}>{number}</Text>
             </View>
           </Pressable>
         ))}
@@ -49,22 +47,11 @@ const DealPicker = ({cardsToDeal, setCardsToDeal }) => {
 const DealButton = ({onKeyPress, text}) => {
   return (
     <Pressable onPress={() => onKeyPress(7)}>
-      <View style={styles.key}>
-        <Text style={styles.keyLetter}>{text}</Text>
+      <View style={styles.dealButton}>
+        <Text style={styles.dealButtonText}>{text}</Text>
       </View>
     </Pressable>
   )
-}
-
-const HandleWin = async (setGifUrl) => {
-  try {
-    const response = await fetch(`https://api.giphy.com/v1/gifs/random?tag=winner&api_key=TcX2E9NN88FXG1LTEiZU3SWMNKTUG1Vn`);
-    const json = await response.json();
-    const gifUrl = json.data.images.original.url
-    setGifUrl(gifUrl)
-  } catch (error) {
-    console.error('Error fetching GIF:', error);
-  }
 }
 
 export default function Game({}) {
@@ -129,11 +116,11 @@ export default function Game({}) {
         setGifUrl()
         setTotalCards(response.totalCards)
       }
-      if (response.handler == "playNum") {
+      if (response.handler == "playCard") {
         newPlayedCards = playedCards + 1
         setPlayedCards(newPlayedCards)
         console.log("Message returned: playing number")
-        number = response.message
+        number = response.card
         player = response.player
         newNumbers = [...numbers]
         newNumbers.push(number)
@@ -157,7 +144,7 @@ export default function Game({}) {
 
   const handleKeyPress = (number) => {
     console.log(number + " pressed")
-    jsonData = {"action": "sendmessage", "message": number, "player": name, "room": room}
+    jsonData = {"action": "playCard", "card": number, "player": name, "room": room}
     ws.send(JSON.stringify(jsonData))
     
     // remove from cards
@@ -190,8 +177,8 @@ export default function Game({}) {
       </ScrollView>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} />
-        <View style={styles.deal}>
-          <DealButton style={styles.dealButton} text="DEAL CARDS" onKeyPress={handleDeal} />
+        <View style={styles.dealRow}>
+          <DealButton text="DEAL CARDS" onKeyPress={handleDeal} />
           <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal} />
         </View>
       </View>
@@ -243,18 +230,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
   },
-  key: {
+  card: {
     backgroundColor: "#d3d6da",
     padding: 10,
     margin: 3,
     borderRadius: 5,
     alignItems: "center"
   },
-  keyLetter: {
+  cardText: {
+    fontSize: 20,
+    alignItems: "center"
+  },
+  dealButton: {
+    backgroundColor: "#d3d6da",
+    padding: 10,
+    margin: 3,
+    borderRadius: 5,
+    alignItems: "center"
+  },
+  dealButtonText: {
     fontSize: 15,
     alignItems: "center"
   },
-  deal: {
+  dealRow: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly"
