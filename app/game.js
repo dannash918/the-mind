@@ -114,6 +114,7 @@ export default function Game({}) {
         setCards(response.message)
         setPlayedCards(0)
         setGifUrl()
+        setGameState("play")
         setTotalCards(response.totalCards)
       }
       if (response.handler == "playCard") {
@@ -128,9 +129,9 @@ export default function Game({}) {
         newText = [...text]
         const newLine = `${player} played: ${number}`
         newText.push(newLine)
+        setText(newText)
         setGameState(response.gameState)
         setGifUrl(response.gifUrl)
-        setText(newText)
       }
       if (response.handler == "join") {
         console.log("Someone joined the room: " + response.user + "Room: " + response.room)
