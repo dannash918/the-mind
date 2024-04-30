@@ -44,11 +44,11 @@ const DealPicker = ({cardsToDeal, setCardsToDeal }) => {
   )
 }
 
-const DealButton = ({onKeyPress, text}) => {
+const DealButton = ({onKeyPress, gameState}) => {
   return (
-    <Pressable onPress={() => onKeyPress(7)}>
+    <Pressable onPress={() => onKeyPress(7)} >
       <View style={styles.dealButton}>
-        <Text style={styles.dealButtonText}>{text}</Text>
+        <Text style={styles.dealButtonText}>DEAL CARDS</Text>
       </View>
     </Pressable>
   )
@@ -66,7 +66,7 @@ export default function Game({}) {
   const [totalCards, setTotalCards] = React.useState()
   const [playedCards, setPlayedCards] = React.useState(0)
   const [gifUrl, setGifUrl] = useState();
-  const [gameState, setGameState] = React.useState("play")
+  const [gameState, setGameState] = React.useState()
 
   useEffect(() => {
     const firstLoad = async () => {
@@ -140,6 +140,10 @@ export default function Game({}) {
         newText.push(newLine)
         setText(newText)
       }
+      if (response.handler == "gameState") {
+        setGameState(response.gameState)
+        setGifUrl(response.gifUrl)
+      }
     };
   });   
 
@@ -179,7 +183,7 @@ export default function Game({}) {
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} />
         <View style={styles.dealRow}>
-          <DealButton text="DEAL CARDS" onKeyPress={handleDeal} />
+          <DealButton gameState={gameState} onKeyPress={handleDeal} />
           <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal} />
         </View>
       </View>
