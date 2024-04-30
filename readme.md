@@ -6,6 +6,7 @@ npx expo start --web
 https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-chat-app.html
 
 ## ToDo
+ - fix up gifs
  - AI generate funny victory/loss statement
  - iphone fix https://maheshnandam.medium.com/use-safeareaview-from-react-navigation-to-fix-iphone-x-design-issue-ba531a9181d ???
 
