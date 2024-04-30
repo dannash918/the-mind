@@ -164,7 +164,7 @@ export default function Game({}) {
   const handleDeal = () => {
     console.log("Attempting to deal")
     ms = {room: room, cards: cardsToDeal}
-    jsonData = {"action": "deal", "room": room, numCards: cardsToDeal}
+    jsonData = {"action": "deal", "room": room, "numCards": cardsToDeal}
     ws.send(JSON.stringify(jsonData))
   }
   
