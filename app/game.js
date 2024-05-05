@@ -56,6 +56,23 @@ const DealButton = ({onKeyPress, gameState}) => {
   )
 }
 
+const gifStyle = (gif) => {
+  console.log("Gif is: " + JSON.stringify(gif))
+  let gifStyle = {}
+  let gifHeight = parseInt(gif.height)
+  let gifWidth = parseInt(gif.width)
+  console.log(`Height: ${gifHeight} Width: ${gifWidth}`)
+  let newHeight = (250 / gifWidth) * gifHeight
+  gifStyle = {
+    height: newHeight,
+    width: 250,
+    marginTop: "10px",
+  }
+  console.log("Gif Style: " + JSON.stringify(gifStyle))
+  return gifStyle
+}
+
+
 export default function Game({}) {
   const [numbers, setNumbers] = React.useState([])
   const [cards, setCards] = React.useState([])
@@ -67,7 +84,7 @@ export default function Game({}) {
   const [text, setText] = React.useState([])
   const [totalCards, setTotalCards] = React.useState()
   const [playedCards, setPlayedCards] = React.useState(0)
-  const [gifUrls, setGifUrls] = useState([]);
+  const [gifs, setGifs] = useState([]);
   const [gameState, setGameState] = React.useState()
 
   useEffect(() => {
@@ -111,12 +128,12 @@ export default function Game({}) {
         console.log("Message returned: dealing cards")
         console.log("Cards: " + response.cards)
         console.log("Total Cards: " + response.totalCards)
-        console.log("Gif URL: " + response.gifUrl)
+        console.log("Gif URL: " + JSON.stringify(response.gifs[0]))
         setNumbers([])
         setText([])
         setCards(response.cards)
         setPlayedCards(0)
-        setGifUrls(response.gifUrls)
+        setGifs(response.gifs)
         setGameState("play")
         setTotalCards(response.totalCards)
       }
@@ -165,6 +182,21 @@ export default function Game({}) {
     jsonData = {"action": "deal", "room": room, "numCards": cardsToDeal}
     ws.send(JSON.stringify(jsonData))
   }
+
+  // let gifStyle = {}
+  // if (gifs && gifs.length > 0) {
+  //   let gifHeight = parseInt(gifs[0].height)
+  //   let gifWidth = parseInt(gifs[0].width)
+  //   console.log(`Height: ${gifHeight} Width: ${gifWidth}`)
+  //   let newHeight = (250 / gifWidth) * gifHeight
+  //   gifStyle = {
+  //     height: newHeight, //parseInt(gifs[0].height),
+  //     width: 250, //parseInt(gifs[0].width),
+  //     marginTop: "10px",
+  //   }
+  //   console.log("Gif Style: " + JSON.stringify(gifStyle))
+  // }
+  
   
   return (
     <SafeAreaView style={styles.container}>
@@ -176,8 +208,8 @@ export default function Game({}) {
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
-      {(gameState === "win") && <View><Image source={{ uri: gifUrls[1] }} style={styles.gif} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
-      {(gameState === "lose") && <View><Image source={{ uri: gifUrls[0] }} style={styles.gif} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
+      {(gameState === "win" && gifs) && <View><Image source={{ uri: gifs[1].url }} style={gifStyle(gifs[1])} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
+      {(gameState === "lose" && gifs) && <View><Image source={{ uri: gifs[0].url }} style={gifStyle(gifs[0])} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
       </ScrollView>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} gameState={gameState} />
@@ -218,7 +250,7 @@ const styles = StyleSheet.create({
   poweredGif: {
     width: 75,
     height: 27,
-    marginLeft: "125px",
+    marginLeft: "175px",
     marginTop: "5px",
   },
   text: {
