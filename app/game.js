@@ -57,18 +57,16 @@ const DealButton = ({onKeyPress, gameState}) => {
 }
 
 const gifStyle = (gif) => {
-  console.log("Gif is: " + JSON.stringify(gif))
-  let gifStyle = {}
   let gifHeight = parseInt(gif.height)
   let gifWidth = parseInt(gif.width)
-  console.log(`Height: ${gifHeight} Width: ${gifWidth}`)
   let newHeight = (250 / gifWidth) * gifHeight
-  gifStyle = {
+  
+  let gifStyle = {
     height: newHeight,
     width: 250,
     marginTop: "10px",
   }
-  console.log("Gif Style: " + JSON.stringify(gifStyle))
+  
   return gifStyle
 }
 
@@ -181,22 +179,7 @@ export default function Game({}) {
     ms = {room: room, cards: cardsToDeal}
     jsonData = {"action": "deal", "room": room, "numCards": cardsToDeal}
     ws.send(JSON.stringify(jsonData))
-  }
-
-  // let gifStyle = {}
-  // if (gifs && gifs.length > 0) {
-  //   let gifHeight = parseInt(gifs[0].height)
-  //   let gifWidth = parseInt(gifs[0].width)
-  //   console.log(`Height: ${gifHeight} Width: ${gifWidth}`)
-  //   let newHeight = (250 / gifWidth) * gifHeight
-  //   gifStyle = {
-  //     height: newHeight, //parseInt(gifs[0].height),
-  //     width: 250, //parseInt(gifs[0].width),
-  //     marginTop: "10px",
-  //   }
-  //   console.log("Gif Style: " + JSON.stringify(gifStyle))
-  // }
-  
+  }  
   
   return (
     <SafeAreaView style={styles.container}>
