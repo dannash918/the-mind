@@ -5,14 +5,13 @@ import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import giphyLogo from'../assets/powered_by_giphy.png';
 
-
 const Keyboard = ({cards, onKeyPress, gameState}) => {
   return (
     <View style={styles.keyboard}>
       <View style={styles.keyboardRow}>
         {cards.map(number => (
           <Pressable key={number} disabled={gameState != "play"} onPress={() => onKeyPress(number)}>
-            <View style={gameState == "play" ? styles.card : styles.fadedCard}>
+            <View style={gameState === "play" ? styles.card : styles.fadedCard}>
               <Text style={styles.cardText}>{number}</Text>
             </View>
           </Pressable>
@@ -70,7 +69,6 @@ const gifStyle = (gif) => {
   return gifStyle
 }
 
-
 export default function Game({}) {
   const [numbers, setNumbers] = React.useState([])
   const [cards, setCards] = React.useState([])
@@ -84,6 +82,7 @@ export default function Game({}) {
   const [playedCards, setPlayedCards] = React.useState(0)
   const [gifs, setGifs] = useState([]);
   const [gameState, setGameState] = React.useState()
+  const [endMessages, setEndMessages] = React.useState([])
 
   useEffect(() => {
     const firstLoad = async () => {
@@ -101,15 +100,18 @@ export default function Game({}) {
   }, []);
 
   useEffect(() => {
-    console.log("Game state is: " + gameState)
-    newText = [...text]
-    if (gameState === "win") {
-      newText.push("You have won!")
-    } else if (gameState === "lose") {
-      newText.push("You have lost")
+    if (gameState != "win" && gameState != "lose") {
+      return
     }
-    setText(newText)
+    let message = gameState === "win" ? endMessages[0] : endMessages[1] 
+    console.log(message)
+    let trimmedMessage = message.replace(/^"(.*)"$/, '$1');
+    let newText = [...text]
+    newText.push(trimmedMessage)
+    setText(newText)  
   }, [gameState]); 
+
+  
 
   useEffect(() => {
     if (ws == null) {return}
@@ -126,13 +128,10 @@ export default function Game({}) {
         console.log("Message returned: dealing cards")
         console.log("Cards: " + response.cards)
         console.log("Total Cards: " + response.totalCards)
-        console.log("Gif URL: " + JSON.stringify(response.gifs[0]))
-        setNumbers([])
-        setText([])
-        setCards(response.cards)
-        setPlayedCards(0)
+        console.log("Gif URL: " + JSON.stringify(response.gifs[0]))        
+        setEndMessages(response.endMessages)    
+        setCards(response.cards)        
         setGifs(response.gifs)
-        setGameState("play")
         setTotalCards(response.totalCards)
       }
       if (response.handler == "playCard") {
@@ -179,6 +178,11 @@ export default function Game({}) {
     ms = {room: room, cards: cardsToDeal}
     jsonData = {"action": "deal", "room": room, "numCards": cardsToDeal}
     ws.send(JSON.stringify(jsonData))
+    setNumbers([])
+    setText([])
+    setCards([])
+    setPlayedCards(0)
+    setGameState("play")
   }  
   
   return (
@@ -191,8 +195,8 @@ export default function Game({}) {
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
-      {(gameState === "win" && gifs) && <View><Image source={{ uri: gifs[1].url }} style={gifStyle(gifs[1])} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
-      {(gameState === "lose" && gifs) && <View><Image source={{ uri: gifs[0].url }} style={gifStyle(gifs[0])} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
+      {(gameState === "win") && <View><Image source={{ uri: gifs[1].url }} style={gifStyle(gifs[1])} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
+      {(gameState === "lose") && <View><Image source={{ uri: gifs[0].url }} style={gifStyle(gifs[0])} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
       </ScrollView>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} gameState={gameState} />
@@ -238,6 +242,8 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: "10px",
+    marginLeft: "30px",
+    marginRight: "30px"
   },
   base: {
     alignContent: "flex-end",
