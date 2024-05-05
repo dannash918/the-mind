@@ -4,13 +4,13 @@ import {Picker} from '@react-native-picker/picker';
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Keyboard = ({cards, onKeyPress}) => {
+const Keyboard = ({cards, onKeyPress, gameState}) => {
   return (
     <View style={styles.keyboard}>
       <View style={styles.keyboardRow}>
         {cards.map(number => (
-          <Pressable key={number} onPress={() => onKeyPress(number)}>
-            <View style={styles.card}>
+          <Pressable key={number} disabled={gameState != "play"} onPress={() => onKeyPress(number)}>
+            <View style={gameState == "play" ? styles.card : styles.fadedCard}>
               <Text style={styles.cardText}>{number}</Text>
             </View>
           </Pressable>
@@ -65,7 +65,7 @@ export default function Game({}) {
   const [text, setText] = React.useState([])
   const [totalCards, setTotalCards] = React.useState()
   const [playedCards, setPlayedCards] = React.useState(0)
-  const [gifUrl, setGifUrl] = useState();
+  const [gifUrls, setGifUrls] = useState([]);
   const [gameState, setGameState] = React.useState()
 
   useEffect(() => {
@@ -109,11 +109,12 @@ export default function Game({}) {
         console.log("Message returned: dealing cards")
         console.log("Cards: " + response.cards)
         console.log("Total Cards: " + response.totalCards)
+        console.log("Gif URL: " + response.gifUrl)
         setNumbers([])
         setText([])
         setCards(response.cards)
         setPlayedCards(0)
-        setGifUrl()
+        setGifUrls(response.gifUrls)
         setGameState("play")
         setTotalCards(response.totalCards)
       }
@@ -131,7 +132,6 @@ export default function Game({}) {
         newText.push(newLine)
         setText(newText)
         setGameState(response.gameState)
-        setGifUrl(response.gifUrl)
       }
       if (response.handler == "join") {
         console.log("Someone joined the room: " + response.user + "Room: " + response.room)
@@ -139,10 +139,6 @@ export default function Game({}) {
         newText = [...text]
         newText.push(newLine)
         setText(newText)
-      }
-      if (response.handler == "gameState") {
-        setGameState(response.gameState)
-        setGifUrl(response.gifUrl)
       }
     };
   });   
@@ -178,10 +174,11 @@ export default function Game({}) {
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
-      {gifUrl && <Image source={{ uri: gifUrl }} style={styles.gif} />}
+      {gameState === "win" && <Image source={{ uri: gifUrls[1] }} style={styles.gif} />}
+      {gameState === "lose" && <Image source={{ uri: gifUrls[0] }} style={styles.gif} />}
       </ScrollView>
       <View style={styles.base}>
-        <Keyboard onKeyPress={handleKeyPress} cards={cards} />
+        <Keyboard onKeyPress={handleKeyPress} cards={cards} gameState={gameState} />
         <View style={styles.dealRow}>
           <DealButton gameState={gameState} onKeyPress={handleDeal} />
           <DealPicker cardsToDeal={cardsToDeal} setCardsToDeal={setCardsToDeal} />
@@ -234,6 +231,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: 10,
+  },
+  fadedCard: {
+    backgroundColor: "#d3d6da",
+    padding: 10,
+    margin: 3,
+    borderRadius: 5,
+    alignItems: "center",
+    opacity: "50%"
   },
   card: {
     backgroundColor: "#d3d6da",
