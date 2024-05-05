@@ -3,6 +3,8 @@ import { StyleSheet, View, Pressable, SafeAreaView, ScrollView, Text, Image } fr
 import {Picker} from '@react-native-picker/picker';
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import giphyLogo from'../assets/powered_by_giphy.png';
+
 
 const Keyboard = ({cards, onKeyPress, gameState}) => {
   return (
@@ -174,8 +176,8 @@ export default function Game({}) {
       {text.map((t, idx) => (
         <Text key={idx} style={styles.text}>{t}</Text>
       ))}
-      {gameState === "win" && <Image source={{ uri: gifUrls[1] }} style={styles.gif} />}
-      {gameState === "lose" && <Image source={{ uri: gifUrls[0] }} style={styles.gif} />}
+      {(gameState === "win") && <View><Image source={{ uri: gifUrls[1] }} style={styles.gif} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
+      {(gameState === "lose") && <View><Image source={{ uri: gifUrls[0] }} style={styles.gif} /><Image source={giphyLogo} style={styles.poweredGif} /></View>}
       </ScrollView>
       <View style={styles.base}>
         <Keyboard onKeyPress={handleKeyPress} cards={cards} gameState={gameState} />
@@ -211,6 +213,12 @@ const styles = StyleSheet.create({
   gif: {
     width: 200,
     height: 200,
+    marginTop: "10px",
+  },
+  poweredGif: {
+    width: 50,
+    height: 18,
+    marginLeft: "150px",
     marginTop: "10px",
   },
   text: {
