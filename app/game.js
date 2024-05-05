@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     width: 75,
     height: 27,
     marginLeft: "175px",
-    marginTop: "5px",
+    marginTop: "-27px",
   },
   text: {
     marginTop: "10px",
