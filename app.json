@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "the-mind",
-    "slug": "the-mind",
+    "name": "Games With Friends",
+    "slug": "games-with-friends",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

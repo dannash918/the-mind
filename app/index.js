@@ -46,7 +46,7 @@ const App = () => {
             style={styles.keyboardView}
           >
             <ScrollView contentContainerStyle={styles.scrollView}>
-              <Text style={styles.formLabel}>Welcome to the Mind</Text>
+              <Text style={styles.formLabel}>Welcome to Games With Friends</Text>
               <TextInput 
                   placeholder="Name" 
                   style={styles.inputStyle}

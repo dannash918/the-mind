@@ -216,10 +216,10 @@ const styles = StyleSheet.create({
     marginTop: "10px",
   },
   poweredGif: {
-    width: 50,
-    height: 18,
-    marginLeft: "150px",
-    marginTop: "10px",
+    width: 75,
+    height: 27,
+    marginLeft: "125px",
+    marginTop: "5px",
   },
   text: {
     marginTop: "10px",

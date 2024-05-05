@@ -19,7 +19,7 @@ export default function Layout() {
             name="game" // This is the name of the page and must match the url from root
             options={{
               drawerLabel: 'Game',
-              title: 'The Mind',
+              title: 'Game',
               drawerItemStyle: { display: 'none' }
             }}
           />
